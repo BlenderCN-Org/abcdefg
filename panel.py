@@ -140,7 +140,7 @@ class VIEW3D_PT_ODCCustomUCLAWax(bpy.types.Panel):
             col = row.column()
             col.prop(addon_prefs, "heal_block_label")
             col.operator("opendental.heal_auto_generate")
-            col.operator("export_mesh.stl", text = "Export Model").use_selection = True
+            col.operator("apg.export_block", text = "Export Model")
             
             box = layout.box()
             row = box.row()
@@ -184,7 +184,7 @@ class VIEW3D_PT_ODCCustomUCLAWax(bpy.types.Panel):
             col.operator("opendental.ucla_remove_timing", text = "Remove Timing Geom")
             col.operator("opendental.heal_cut_at_cursor", text = "Cut at Cursor")
             col.operator("opendental.heal_extend_flat", text = "Extend From Cursor")
-            
+            col.operator("apg.export_abutment", text = "Export Abutment")
             
         row = layout.row()
         row.label('Generate Profiles and Shapes')
@@ -300,7 +300,7 @@ class VIEW3D_PT_ODCCustomUCLAWax(bpy.types.Panel):
 
         row = layout.row()
         col = row.column()
-        col.operator("export_mesh.stl", text = "Export Model").use_selection = True
+        col.operator("apg.export_block", text = "Export Block")
         
         box = layout.box()
         row = box.row()

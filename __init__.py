@@ -271,12 +271,13 @@ class UCLAPreferences(AddonPreferences):
 
                           
 def register():
-    import odcutils, panel, healing_abutment, tracking #, crown, margin, bridge, splint, implant, panel, help, flexible_tooth, bracket_placement, denture_base, occlusion, ortho, curve_partition # , odcmenus, bgl_utils
+    import odcutils, panel, healing_abutment, tracking, import_export #, crown, margin, bridge, splint, implant, panel, help, flexible_tooth, bracket_placement, denture_base, occlusion, ortho, curve_partition # , odcmenus, bgl_utils
      
     #register them
     odcutils.register()
-    panel.register()
     healing_abutment.register()
+    import_export.register()
+    panel.register()
     
     bpy.utils.register_class(UCLAPreferences)
 

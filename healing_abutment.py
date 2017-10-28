@@ -31,6 +31,7 @@ from mesh_cut import space_evenly_on_path, grow_selection_to_find_face, edge_loo
     point_inside_loop2d, nearest_point_to_path
 from odcutils import get_settings
 from bmesh_fns import join_objects, edge_loop_neighbors
+import tracking
 
 #############################################
 ####### UTILITIES ###########################
@@ -427,6 +428,7 @@ class OPENDENTAL_OT_heal_import_abutment(bpy.types.Operator):
             self.report({'ERROR'}, 'Must Select File abve')
             
         file_name = os.path.basename(file_path)
+        tracking.trackUsage("apgImportAbutment",file_name)
         
         suff =  file_name[len(file_name)-4:]
         if suff not in {'.stl', '.obj','.STL','.OBJ'}:
@@ -2383,7 +2385,7 @@ class OPENDENTAL_OT_heal_custom_text(bpy.types.Operator):
         
         txt_ob.matrix_world = T * R * S
         
-        
+        tracking.trackUsage("apgCustomText",prefs.heal_custom_text)
                    
         return {"FINISHED"}
     
@@ -2694,6 +2696,8 @@ class OPENDENTAL_OT_heal_auto_generate(bpy.types.Operator):
         prefs.heal_custom_text = old_text
         
         
+        params = [prefs.heal_print_type, prefs.heal_profile, prefs.profile_scale, prefs.heal_tooth_preset, prefs.heal_number_sys]
+        tracking.trackUsage("apgWizard",params)
         return {'FINISHED'}
 
 #panels we want to keep for the user
