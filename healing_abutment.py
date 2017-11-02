@@ -2165,22 +2165,24 @@ class OPENDENTAL_OT_heal_generate_text(bpy.types.Operator):
         #goal is 5mm x 5mm text?
         
         ys = []
-    
+        zs = []
         for ob in profile_obs:
             bb = ob.bound_box
             for v in bb:
                 loc = ob.matrix_world * Vector(v)
                 ys += [loc[1]]
-        
+                zs += [loc[2]]
+                
         max_y = max(ys)
         min_y = min(ys)
         
-        zs = []
-        t_base = bpy.data.objects.get('Templates Base')
-        bb = t_base.bound_box
-        for v in bb:
-            loc = t_base.matrix_world * Vector(v)
-            zs += [loc[2]]
+        if prefs.heal_print_type == 'DIRECT':
+            #find the top of the block
+            t_base = bpy.data.objects.get('Templates Base')
+            bb = t_base.bound_box
+            for v in bb:
+                loc = t_base.matrix_world * Vector(v)
+                zs += [loc[2]]
             
         max_z = max(zs)
         
@@ -2223,7 +2225,7 @@ class OPENDENTAL_OT_heal_generate_text(bpy.types.Operator):
             if prefs.heal_print_type == 'INVERTED':
                 S = Matrix.Identity(4)
                 #S[0][0] = -1
-                T = Matrix.Translation(Vector((ob.location[0], y, max_z-1.5)))
+                T = Matrix.Translation(Vector((ob.location[0], y, max_z-.2)))
                 txt_ob.matrix_world = T * S
             else:
                 txt_ob.matrix_world = Matrix.Translation(Vector((ob.location[0], y, max_z)))
