@@ -2416,6 +2416,11 @@ class OPENDENTAL_OT_heal_emboss_text(bpy.types.Operator):
         
         bpy.ops.object.select_all(action = 'DESELECT')
         for ob in labels:
+            
+            if '6' in ob.data.body or '9' in ob.data.body:
+                octree = 5
+            else:
+                octree = 4
             print(ob.name)
             bpy.ops.object.select_all(action = 'DESELECT')
             ob.select = True
@@ -2436,7 +2441,7 @@ class OPENDENTAL_OT_heal_emboss_text(bpy.types.Operator):
             new_ob.select = True
             context.scene.objects.active = new_ob
             mod = new_ob.modifiers.new('REMESH', type = 'REMESH')
-            mod.octree_depth = 4
+            mod.octree_depth = octree
             bpy.ops.object.mode_set(mode = 'EDIT')
             bpy.ops.mesh.select_all(action = 'SELECT')
             bpy.ops.mesh.remove_doubles()
