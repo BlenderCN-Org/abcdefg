@@ -6,7 +6,7 @@
 bl_info = {
     'name': "Anatomic Profile Generator",
     'author': "Patrick R. Moore",
-    'version': (1,0,9),
+    'version': (1,1,0),
     'blender': (2, 7, 8),
     'api': 59393,
     'location': "3D View -> Tool Shelf",
@@ -190,6 +190,18 @@ class UCLAPreferences(AddonPreferences):
             description = "Constant which controls beveling of the block",
             default=3, min = 1, max = 5)
         
+    
+    mould_wall_thickness = bpy.props.FloatProperty(
+            name="Mould Wall Thickness",
+            description = "Wall thickness for inverted moutl",
+            default=4.2, min = 2, max = 10)
+    
+    
+    default_text_size = bpy.props.FloatProperty(
+            name="Default Text Size",
+            description = "Size of Labels",
+            default=3.0, min = 2, max = 10)
+    
     heal_n_cols = bpy.props.IntProperty(
             name = "Wells Per Row",
             default = 6, min = 1, max = 32)

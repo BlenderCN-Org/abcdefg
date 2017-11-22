@@ -32,6 +32,7 @@ from mesh_cut import space_evenly_on_path, grow_selection_to_find_face, edge_loo
 from odcutils import get_settings
 from bmesh_fns import join_objects, edge_loop_neighbors
 import tracking
+import odcutils
 
 #############################################
 ####### UTILITIES ###########################
@@ -1912,7 +1913,7 @@ class OPENDENTAL_OT_heal_generate_box(bpy.types.Operator):
         self.bevel_width = prefs.heal_bevel_width
         self.border_x = prefs.heal_block_border_x
         self.border_y = prefs.heal_block_border_y
-        
+        self.wall_thickness = prefs.mould_wall_thickness
         return self.execute(context)
         
     def execute(self, context):
@@ -1998,7 +1999,7 @@ class OPENDENTAL_OT_heal_generate_box(bpy.types.Operator):
         
         mod = cube.modifiers.new('Solid', type = 'SOLIDIFY')
         mod.offset = 1
-        mod.thickness = 4
+        mod.thickness = self.wall_thickness
         cube.select = True
         context.scene.objects.active = cube
         bpy.ops.object.modifier_apply(modifier = 'Solid')
@@ -2143,7 +2144,7 @@ class OPENDENTAL_OT_heal_generate_box(bpy.types.Operator):
 
 
 class OPENDENTAL_OT_heal_generate_text(bpy.types.Operator):
-    """Generate Label above/below the UCLA wells"""
+    """Generate Label above/below the wells"""
     bl_idname = "opendental.heal_generate_text"
     bl_label = "Generate Labels"
     bl_options = {'REGISTER', 'UNDO'}
@@ -2158,6 +2159,12 @@ class OPENDENTAL_OT_heal_generate_text(bpy.types.Operator):
         return True
     
 
+    def invoke(self, context, event):
+        prefs = get_settings()
+        self.font_size = prefs.default_text_size
+        
+        return self.execute(context)
+        
     def execute(self, context):
     
         profile_obs = [ob for ob in bpy.data.objects if 'Profile' in ob.name and 'Final' not in ob.name]
@@ -2265,6 +2272,13 @@ class OPENDENTAL_OT_heal_custom_text(bpy.types.Operator):
             return False
         return True
             
+    
+    def invoke(self, context, event):
+        prefs = get_settings()
+        self.font_size = prefs.default_text_size
+        
+        return self.execute(context)
+        
     def execute(self, context):
         context.scene.update()
         
@@ -2662,7 +2676,7 @@ class OPENDENTAL_OT_heal_auto_generate(bpy.types.Operator):
         bpy.ops.opendental.heal_database_profiles('INVOKE_DEFAULT')
         bpy.ops.opendental.heal_mesh_convert('EXEC_DEFAULT')
         bpy.ops.opendental.heal_generate_box('INVOKE_DEFAULT')
-        bpy.ops.opendental.heal_generate_text()
+        bpy.ops.opendental.heal_generate_text(font_size = prefs.default_text_size)
         
         box = bpy.data.objects.get('Templates Base')
         
@@ -2688,12 +2702,12 @@ class OPENDENTAL_OT_heal_auto_generate(bpy.types.Operator):
             bb = box.bound_box
             z = max(bb, key = lambda x: x[2])
             context.scene.cursor_location = Vector((0,0,z[2]))
-            bpy.ops.opendental.heal_custom_text(x_align = 'CENTER', y_align = 'CENTER')
+            bpy.ops.opendental.heal_custom_text(x_align = 'CENTER', y_align = 'CENTER', font_size = prefs.default_text_size)
         else:
             bb = box.bound_box
             z = min(bb, key = lambda x: x[2])
             context.scene.cursor_location = Vector((0,0,z[2]+.3))
-            bpy.ops.opendental.heal_custom_text(x_align = 'CENTER', y_align = 'CENTER', invert = True, spin = True)
+            bpy.ops.opendental.heal_custom_text(x_align = 'CENTER', y_align = 'CENTER', invert = True, spin = True, font_size = prefs.default_text_size)
             
         #Do the boolean ops
         bpy.ops.opendental.heal_emboss_text()

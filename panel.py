@@ -18,30 +18,32 @@ class VIEW3D_PT_ODCCustomUCLAWax(bpy.types.Panel):
         addon_prefs = get_settings()
         
         row = layout.row()
-        row.prop(addon_prefs, "heal_show_prefs", text = "Show Settings")
+        row.label(text = "Preferences")
+        
+        row = layout.row()
+        col = row.column()
+        col.prop(addon_prefs, "heal_workflow")
+        col.prop(addon_prefs, "heal_profile")
+        col.prop(addon_prefs, "profile_scale")
+        col.prop(addon_prefs, "heal_print_type", text = "Print Type")
+        col.prop(addon_prefs, "heal_number_sys", text = "Number System")
+   
+        row = layout.row()
+        row.prop(addon_prefs, "heal_show_prefs", text = "Show Settings")     
         
         if addon_prefs.heal_show_prefs:
             row = layout.row()
-            row.label(text = "Preferences")
-            
-            row = layout.row()
             col = row.column()
-            col.prop(addon_prefs, "heal_workflow")
-            col.prop(addon_prefs, "heal_profile")
-            col.prop(addon_prefs, "profile_scale")
-            col.prop(addon_prefs, "heal_print_type", text = "Print Type")
-            col.prop(addon_prefs, "heal_number_sys", text = "Number System")
-            
-            if addon_prefs.heal_workflow == 'ADVANCED':
-                col.prop(addon_prefs, "heal_passive_offset", text = "Passive Gap")
-                col.prop(addon_prefs, "heal_block_border_x", text = "Border Horizontal")
-                col.prop(addon_prefs, "heal_block_border_y", text = "Border Vertical")
-                col.prop(addon_prefs, "heal_inter_space_x", text = "Spacing Horizontal")
-                col.prop(addon_prefs, "heal_inter_space_y", text = "Spacing Vertical")
-                col.prop(addon_prefs, "heal_middle_space_x", text = "Spacing Middle")
-                col.prop(addon_prefs, "heal_bevel_width", text = "Bevel Width")
-            
-            
+            col.prop(addon_prefs, "heal_passive_offset", text = "Passive Gap")
+            col.prop(addon_prefs, "heal_block_border_x", text = "Border Horizontal")
+            col.prop(addon_prefs, "heal_block_border_y", text = "Border Vertical")
+            col.prop(addon_prefs, "heal_inter_space_x", text = "Spacing Horizontal")
+            col.prop(addon_prefs, "heal_inter_space_y", text = "Spacing Vertical")
+            col.prop(addon_prefs, "heal_middle_space_x", text = "Spacing Middle")
+            col.prop(addon_prefs, "heal_bevel_width", text = "Bevel Width")
+            col.prop(addon_prefs, "mould_wall_thickness", text = "Wall Thickness")
+            col.prop(addon_prefs, "default_text_size", text = "Label Font Size")
+        
             #col.prop(addon_prefs, "heal_abutment_depth", text = "Abutment Depth")
             #col.prop(addon_prefs, "heal_show_prefs", text = "Show Settings")
             #col.prop(addon_prefs, "heal_show_prefs", text = "Show Settings")
