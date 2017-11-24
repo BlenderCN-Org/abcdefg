@@ -2576,7 +2576,8 @@ class OPENDENTAL_OT_heal_create_final_template(bpy.types.Operator):
             mod.operation = 'UNION'
         else:
             mod.operation = 'DIFFERENCE'
-            
+        
+        #mod.solver = 'CARVE'    
         mod.object = profiles_joined
         
         t_base.draw_type = 'SOLID'
@@ -2651,6 +2652,33 @@ class OPENDENTAL_OT_heal_boolean_nudge_block(bpy.types.Operator):
         
         return {"FINISHED"}
 
+
+class OPENDENTAL_OT_heal_boolean_change_solver(bpy.types.Operator):
+    """Use this to fix profiles not joining/subtracting from block succesfully"""
+    bl_idname = "opendental.heal_boolean_change_solver"
+    bl_label = "Boolean Solver Change"
+    bl_options = {'REGISTER', 'UNDO'}
+    
+    @classmethod
+    def poll(cls, context):
+        
+        if "Templates Base" not in bpy.data.objects:
+            return False
+        return True
+    
+    solver = bpy.props.EnumProperty(items = [('BMESH','BMESH','BMESH'), ('CARVE','CARVE','CARVE')], default = 'CARVE')
+
+    def execute(self, context):
+        
+        
+        ob = bpy.data.objects.get('Templates Base')
+        if ob == None: return {'FINISHED'}
+        
+        for mod in ob.modifiers:
+            if mod.type == 'BOOLEAN':
+                mod.solver = self.solver
+        
+        return {"FINISHED"}
 
 class OPENDENTAL_OT_heal_auto_generate(bpy.types.Operator):
     """Generate Complete Box Base"""
@@ -2751,6 +2779,7 @@ def register():
     bpy.utils.register_class(OPENDENTAL_OT_heal_create_final_template)
     bpy.utils.register_class(OPENDENTAL_OT_heal_boolean_nudge)
     bpy.utils.register_class(OPENDENTAL_OT_heal_boolean_nudge_block)
+    bpy.utils.register_class(OPENDENTAL_OT_heal_boolean_change_solver)
     bpy.utils.register_class(OPENDENTAL_OT_heal_auto_generate)
     
     #clean up all 3d tool panels
@@ -2760,10 +2789,15 @@ def register():
             if "bl_rna" in pt.__dict__:   # <-- check if we already removed!
                 bpy.utils.unregister_class(pt)
                 __m.panels += [pt]
-        if pt.bl_space_type == 'PROPERTIES':
-            if "bl_rna" in pt.__dict__:
-                bpy.utils.unregister_class(pt)
-                __m.panels += [pt]
+        #if pt.bl_space_type == 'PROPERTIES':
+        #    if "bl_rna" in pt.__dict__:
+                
+        #        if hasattr(pt, 'bl_idname'):
+        #            print(pt.bl_idname)
+                    
+                    
+                #bpy.utils.unregister_class(pt)
+                #__m.panels += [pt]
         
     #bpy.utils.register_module(__name__)
    
@@ -2793,6 +2827,7 @@ def unregister():
     bpy.utils.unregister_class(OPENDENTAL_OT_heal_create_final_template)
     bpy.utils.unregister_class(OPENDENTAL_OT_heal_boolean_nudge)
     bpy.utils.unregister_class(OPENDENTAL_OT_heal_boolean_nudge_block)
+    bpy.utils.unregister_class(OPENDENTAL_OT_heal_boolean_change_solver)
     bpy.utils.unregister_class(OPENDENTAL_OT_heal_auto_generate)
 
     for pt in __m.panels:

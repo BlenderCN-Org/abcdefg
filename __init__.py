@@ -6,7 +6,7 @@
 bl_info = {
     'name': "Anatomic Profile Generator",
     'author': "Patrick R. Moore",
-    'version': (1,1,0),
+    'version': (1,1,1),
     'blender': (2, 7, 8),
     'api': 59393,
     'location': "3D View -> Tool Shelf",

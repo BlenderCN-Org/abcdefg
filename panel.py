@@ -149,7 +149,8 @@ class VIEW3D_PT_ODCCustomUCLAWax(bpy.types.Panel):
             row.label('Boolean Fixes')
             row = box.row()
             col = row.column()
-            col.operator("opendental.heal_boolean_nudge", text = "Fix Boolean")
+            col.operator("opendental.heal_boolean_change_solver", text = "Change Solver")
+            col.operator("opendental.heal_boolean_nudge", text = "Nudge Booleans")
             col.operator("opendental.heal_boolean_nudge_block",text = "Fix Booleans in Bottom")
         
         
