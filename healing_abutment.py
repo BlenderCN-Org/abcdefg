@@ -33,6 +33,7 @@ from odcutils import get_settings
 from bmesh_fns import join_objects, edge_loop_neighbors
 import tracking
 import odcutils
+from common_utilities import bversion
 
 #############################################
 ####### UTILITIES ###########################
@@ -321,14 +322,17 @@ class OPENDENTAL_OT_heal_abutment_generator(bpy.types.Operator):
         bme.faces.ensure_lookup_table()
         
         r = pairs[0][0]
-        circle_data = bmesh.ops.create_circle(bme, cap_ends = True, segments = 64, diameter = r/2)
-        print(circle_data)
+        if bversion() > "002.079.003":
+            circle_data = bmesh.ops.create_circle(bme, cap_ends = True, segments = 64, radius = r/2)
+        else:
+            circle_data = bmesh.ops.create_circle(bme, cap_ends = True, segments = 64, diameter = r/2)
+        #print(circle_data)
         
         bme.edges.ensure_lookup_table()
         new_eds = bme.edges[:]
         
-        print(pairs)
-        print(new_eds)
+        #print(pairs)
+        #print(new_eds)
         for i, pair in enumerate(pairs):
             
             r = pair[0]/2
@@ -400,9 +404,6 @@ class OPENDENTAL_OT_heal_abutment_generator(bpy.types.Operator):
         row.prop(self, "width6")
         row.prop(self, "height6")
         
-        row = layout.row()
-        row.prop(self, "width7")
-        row.prop(self, "height7")
         
         
 class OPENDENTAL_OT_heal_import_abutment(bpy.types.Operator):
@@ -1694,7 +1695,10 @@ class OPENDENTAL_OT_heal_mesh_convert(bpy.types.Operator):
                 ob.matrix_world[2][2] = 1
             center = ob.matrix_world.inverted() * tibase.location
             T = Matrix.Translation(center)
-            circle_data = bmesh.ops.create_circle(bme, cap_ends = False, segments = 64, diameter = tibase.dimensions[0]/2 + .1, matrix = T)
+            if bversion() > "002.079.003":
+                circle_data = bmesh.ops.create_circle(bme, cap_ends = False, segments = 64, radius = tibase.dimensions[0]/2 + .1, matrix = T)
+            else:
+                circle_data = bmesh.ops.create_circle(bme, cap_ends = False, segments = 64, diameter = tibase.dimensions[0]/2 + .1, matrix = T)
             #for bmv in circle_data['verts']:
                 #bmv.co[2] -= cyl_depth
                 
